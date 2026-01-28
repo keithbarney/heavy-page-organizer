@@ -1,22 +1,2 @@
-# Node modules
-/node_modules/
-
-# Build output
-/dist/
-
-# Logs
-*.log
-
-# Environment files
-.env
-
-# IDE specific files
-.vscode/
-.idea/
-
-# macOS system files
-.DS_Store
-
-# NPM lock files
-package-lock.json
-yarn.lock
+node_modules/
+code.js
