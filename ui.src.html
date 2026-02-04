@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- HEAVY_THEME -->
+</head>
+<body>
+  <div class="header">
+    <h1>Heavy Page Organizer</h1>
+  </div>
+
+  <div class="form-group">
+    <label for="horizontalSpacing">Horizontal Spacing</label>
+    <input id="horizontalSpacing" type="number" value="500" autofocus>
+  </div>
+
+  <div class="form-group">
+    <label for="verticalSpacing">Vertical Spacing</label>
+    <input id="verticalSpacing" type="number" value="500">
+  </div>
+
+  <div class="actions">
+    <button class="btn-secondary" id="cancel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Cancel</button>
+    <button class="btn-primary" id="apply"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Apply</button>
+  </div>
+
+  <div class="support-link">
+    <a href="#" id="support-link">Support this plugin &#9829;</a>
+  </div>
+
+  <script>
+    const SUPPORT_URL = 'https://heavy.lemonsqueezy.com';
+    const horizontalInput = document.getElementById('horizontalSpacing');
+    const verticalInput = document.getElementById('verticalSpacing');
+    const applyBtn = document.getElementById('apply');
+    const cancelBtn = document.getElementById('cancel');
+
+    window.onload = function() {
+      horizontalInput.focus();
+      horizontalInput.select();
+    };
+
+    // Handle messages from plugin code
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+
+      if (msg?.type === 'load-spacing') {
+        horizontalInput.value = msg.horizontalSpacing ?? 500;
+        verticalInput.value = msg.verticalSpacing ?? 500;
+      }
+    };
+
+    // Listen for Enter key
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        applyBtn.click();
+      }
+    });
+
+    applyBtn.addEventListener('click', () => {
+      const horizontalSpacing = parseFloat(horizontalInput.value) || 0;
+      const verticalSpacing = parseFloat(verticalInput.value) || 0;
+
+      parent.postMessage({
+        pluginMessage: {
+          type: 'organize-frames',
+          horizontalSpacing,
+          verticalSpacing
+        }
+      }, '*');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
+    });
+
+    document.getElementById('support-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      parent.postMessage({ pluginMessage: { type: 'open-url', url: SUPPORT_URL } }, '*');
+    });
+  </script>
+</body>
+</html>
