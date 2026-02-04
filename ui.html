@@ -96,6 +96,22 @@
     .btn-secondary:hover:not(:disabled) {
       background: #e5e5e5;
     }
+
+    .support-link {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 11px;
+    }
+
+    .support-link a {
+      color: #999;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .support-link a:hover {
+      color: #333;
+    }
   </style>
 </head>
 <body>
@@ -118,7 +134,12 @@
     <button class="btn-primary" id="apply">Apply</button>
   </div>
 
+  <div class="support-link">
+    <a href="#" id="support-link">Support this plugin ♥</a>
+  </div>
+
   <script>
+    const SUPPORT_URL = 'https://heavy.lemonsqueezy.com';
     const horizontalInput = document.getElementById('horizontalSpacing');
     const verticalInput = document.getElementById('verticalSpacing');
     const applyBtn = document.getElementById('apply');
@@ -134,8 +155,8 @@
       const msg = event.data.pluginMessage;
 
       if (msg?.type === 'load-spacing') {
-        horizontalInput.value = msg.horizontalSpacing || 500;
-        verticalInput.value = msg.verticalSpacing || 500;
+        horizontalInput.value = msg.horizontalSpacing ?? 500;
+        verticalInput.value = msg.verticalSpacing ?? 500;
       }
     };
 
@@ -161,6 +182,11 @@
 
     cancelBtn.addEventListener('click', () => {
       parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
+    });
+
+    document.getElementById('support-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      parent.postMessage({ pluginMessage: { type: 'open-url', url: SUPPORT_URL } }, '*');
     });
   </script>
 </body>
