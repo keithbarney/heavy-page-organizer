@@ -74,6 +74,28 @@ function organizeFrames(verticalSpacing: number, horizontalSpacing: number) {
     return;
   }
 
+  // Pre-assign each sub-component to its longest matching parent name
+  // This prevents "Button" from stealing ".Button Group" when "Button Group" exists
+  const DELIMITERS = ["/", ".", " "];
+  const subToParent = new Map<string, string>();
+
+  for (const sub of subComponents) {
+    const subName = sub.name.trim();
+    let bestMatch = "";
+    for (const main of mainComponents) {
+      const parentName = main.name.trim();
+      const prefix = `.${parentName}`;
+      if (subName === prefix || DELIMITERS.some(d => subName.startsWith(prefix + d))) {
+        if (parentName.length > bestMatch.length) {
+          bestMatch = parentName;
+        }
+      }
+    }
+    if (bestMatch) {
+      subToParent.set(sub.id, bestMatch);
+    }
+  }
+
   const allSelected: SceneNode[] = [];
   const placedSubs = new Set<BaseNode>();
   let xOffset = 0;
@@ -87,15 +109,10 @@ function organizeFrames(verticalSpacing: number, horizontalSpacing: number) {
 
     let yOffset = mainComponent.height + verticalSpacing;
 
-    // Find related sub-components (those starting with ".MainComponentName")
+    // Find sub-components assigned to this parent
     const parentName = mainComponent.name.trim();
     const relatedSubs = subComponents
-      .filter((sub) => {
-        const subName = sub.name.trim();
-        return subName === `.${parentName}` ||
-               subName.startsWith(`.${parentName}/`) ||
-               subName.startsWith(`.${parentName}.`);
-      })
+      .filter((sub) => subToParent.get(sub.id) === parentName)
       .sort((a, b) => a.name.localeCompare(b.name));
 
     for (const subComponent of relatedSubs) {
