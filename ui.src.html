@@ -24,10 +24,11 @@
   </div>
 
   <div class="support-link">
-    <a href="#" id="support-link">Support this plugin &#9829;</a>
+    <a href="#" id="feedback-link">Feedback</a> · <a href="#" id="support-link">Support this plugin &#9829;</a>
   </div>
 
   <script>
+    const FEEDBACK_URL = 'https://github.com/keithbarney/heavy-page-organizer/issues';
     const SUPPORT_URL = 'https://heavy.lemonsqueezy.com';
     const horizontalInput = document.getElementById('horizontalSpacing');
     const verticalInput = document.getElementById('verticalSpacing');
@@ -71,6 +72,11 @@
 
     cancelBtn.addEventListener('click', () => {
       parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
+    });
+
+    document.getElementById('feedback-link').addEventListener('click', (e) => {
+      e.preventDefault();
+      parent.postMessage({ pluginMessage: { type: 'open-url', url: FEEDBACK_URL } }, '*');
     });
 
     document.getElementById('support-link').addEventListener('click', (e) => {
