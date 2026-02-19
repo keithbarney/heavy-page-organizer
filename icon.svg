@@ -1,0 +1,22 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="128" height="128" rx="16" fill="#2B303B"/>
+
+  <!-- Three columns representing organized components -->
+  <!-- Column 1 (tall parent + short sub) -->
+  <rect x="20" y="28" width="24" height="32" rx="3" fill="#8FA1B3"/>
+  <rect x="20" y="66" width="24" height="16" rx="3" fill="#4F5B66"/>
+  <rect x="20" y="88" width="24" height="16" rx="3" fill="#4F5B66"/>
+
+  <!-- Column 2 (medium parent + sub) -->
+  <rect x="52" y="28" width="24" height="24" rx="3" fill="#8FA1B3"/>
+  <rect x="52" y="58" width="24" height="16" rx="3" fill="#4F5B66"/>
+
+  <!-- Column 3 (short parent) -->
+  <rect x="84" y="28" width="24" height="20" rx="3" fill="#8FA1B3"/>
+
+  <!-- Sort arrows (A→Z) -->
+  <path d="M32 110L26 118H38L32 110Z" fill="#65737E"/>
+  <path d="M64 118L58 110H70L64 118Z" fill="#65737E"/>
+  <line x1="32" y1="110" x2="64" y2="110" stroke="#65737E" stroke-width="2"/>
+</svg>
