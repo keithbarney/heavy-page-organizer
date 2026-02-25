@@ -1,7 +1,8 @@
 // Heavy Page Organizer — Figma Plugin
 // Organizes components on a page: main components in columns, sub-components below, sections to the right
 
-figma.showUI(__html__, { width: 400, height: 400 });
+const UI_WIDTH = 300;
+figma.showUI(__html__, { width: UI_WIDTH, height: 240 });
 
 // Load previous spacing values from client storage
 async function loadSpacingValues() {
@@ -22,6 +23,11 @@ loadSpacingValues();
 
 // Listen for messages from the UI
 figma.ui.onmessage = async (msg) => {
+  if (msg?.type === 'resize') {
+    figma.ui.resize(UI_WIDTH, msg.height);
+    return;
+  }
+
   if (msg?.type === "organize-frames") {
     const verticalSpacing = parseFloat(msg?.verticalSpacing) || 0;
     const horizontalSpacing = parseFloat(msg?.horizontalSpacing) || 0;

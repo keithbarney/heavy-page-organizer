@@ -3,11 +3,7 @@
 <head>
   <!-- HEAVY_THEME -->
 </head>
-<body>
-  <div class="header">
-    <h1>Heavy Page Organizer</h1>
-  </div>
-
+<body class="light-mode">
   <div class="form-group">
     <label for="horizontalSpacing">Horizontal Spacing</label>
     <input id="horizontalSpacing" type="number" value="500" autofocus>
@@ -19,21 +15,19 @@
   </div>
 
   <div class="actions">
-    <button class="btn-secondary" id="cancel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Cancel</button>
-    <button class="btn-primary" id="apply"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Apply</button>
+    <button class="btn-primary" id="apply">Organize</button>
   </div>
 
   <div class="support-link">
-    <a href="#" id="feedback-link">Feedback</a> · <a href="#" id="support-link">Support this plugin &#9829;</a>
+    <a href="#" id="feedback-link">Feedback</a> · <a href="#" id="support-link">Buy me a coffee <span style="font-size: 14px">&#9749;</span></a> · <button class="theme-toggle" id="theme-toggle" title="Toggle light/dark mode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
   </div>
 
   <script>
-    const FEEDBACK_URL = 'https://github.com/keithbarney/heavy-page-organizer/issues';
-    const SUPPORT_URL = 'https://heavy.lemonsqueezy.com';
+    const FEEDBACK_URL = 'mailto:keithbarneydesign@gmail.com?subject=Heavy Page Organizer Feedback';
+    const SUPPORT_URL = 'https://buy.stripe.com/8x2eVfdpYfbW5Rd1Ax87K01';
     const horizontalInput = document.getElementById('horizontalSpacing');
     const verticalInput = document.getElementById('verticalSpacing');
     const applyBtn = document.getElementById('apply');
-    const cancelBtn = document.getElementById('cancel');
 
     window.onload = function() {
       horizontalInput.focus();
@@ -70,10 +64,6 @@
       }, '*');
     });
 
-    cancelBtn.addEventListener('click', () => {
-      parent.postMessage({ pluginMessage: { type: 'close' } }, '*');
-    });
-
     document.getElementById('feedback-link').addEventListener('click', (e) => {
       e.preventDefault();
       parent.postMessage({ pluginMessage: { type: 'open-url', url: FEEDBACK_URL } }, '*');
@@ -83,6 +73,36 @@
       e.preventDefault();
       parent.postMessage({ pluginMessage: { type: 'open-url', url: SUPPORT_URL } }, '*');
     });
+
+    // Theme toggle
+    var sunIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>';
+    var moonIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+    var themeToggle = document.getElementById('theme-toggle');
+    try { var savedTheme = localStorage.getItem('heavy-plugin-theme'); } catch(e) { var savedTheme = null; }
+    if (savedTheme === 'dark') {
+      document.body.classList.remove('light-mode');
+      themeToggle.innerHTML = sunIcon;
+    } else {
+      themeToggle.innerHTML = moonIcon;
+    }
+    themeToggle.addEventListener('click', function() {
+      var isLight = document.body.classList.contains('light-mode');
+      if (isLight) {
+        document.body.classList.remove('light-mode');
+        try { localStorage.setItem('heavy-plugin-theme', 'dark'); } catch(e) {}
+        themeToggle.innerHTML = sunIcon;
+      } else {
+        document.body.classList.add('light-mode');
+        try { localStorage.removeItem('heavy-plugin-theme'); } catch(e) {}
+        themeToggle.innerHTML = moonIcon;
+      }
+    });
+
+    // Auto-resize to fit content
+    new ResizeObserver(function() {
+      var h = document.documentElement.scrollHeight;
+      parent.postMessage({ pluginMessage: { type: 'resize', height: h } }, '*');
+    }).observe(document.body);
   </script>
 </body>
 </html>
